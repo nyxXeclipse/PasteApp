@@ -1,11 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 
-const initialState = {
-  pastes: localStorage.getItem("pastes")
-    ? JSON.parse(localStorage.getItem("pastes"))
-    : [],
+const getInitialPastes = () => {
+  try {
+    const pastes = localStorage.getItem("pastes");
+    return pastes ? JSON.parse(pastes) : [];
+  } catch (error) {
+    console.error("Invalid JSON in localStorage, resetting pastes");
+    localStorage.removeItem("pastes");
+    return [];
+  }
 };
+
+const initialState = {
+  pastes: getInitialPastes(),
+};
+
 
 export const pasteSlice = createSlice({
   name: "paste",
